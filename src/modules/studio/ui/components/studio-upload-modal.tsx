@@ -23,6 +23,8 @@ export const StudioUploadModal = () => {
       variant="secondary"
       onClick={() => create.mutate()}
       disabled={create.isPending}
+      // Changed to absolute to fix flicker while loading page
+      className="absolute right-16 top-3.5"
     >
       {create.isPending ? (
         <Loader2Icon className="animate-spin" />
