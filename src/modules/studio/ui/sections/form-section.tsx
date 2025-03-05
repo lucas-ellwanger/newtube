@@ -20,6 +20,7 @@ import {
 import { trpc } from "@/trpc/client";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { videoUpdateSchema } from "@/db/schema";
+import { THUMBNAIL_FALLBACK } from "@/constants";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,6 +46,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
+import Image from "next/image";
 
 interface FormSectionProps {
   videoId: string;
@@ -199,7 +201,26 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
               )}
             />
 
-            {/* TODO: Add thumbnail field here */}
+            <FormField
+              control={form.control}
+              name="thumbnailUrl"
+              render={() => (
+                <FormItem>
+                  <FormLabel>Thumbnail</FormLabel>
+
+                  <FormControl>
+                    <div className="p-0.5 border border-dashed border-neutral-400 relative h-[84px] w-[153px] group">
+                      <Image
+                        src={video.thumbnailUrl ?? THUMBNAIL_FALLBACK}
+                        alt="Thumbnail"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
