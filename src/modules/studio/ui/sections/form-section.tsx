@@ -126,6 +126,22 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     },
   });
 
+  const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
+    onMutate: () => {
+      const toastId = toast.loading("Processing task...");
+      return { toastId };
+    },
+    onSuccess: (_, __, { toastId }) => {
+      toast.success("Background job started", {
+        description: "This may take some time",
+        id: toastId,
+      });
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     resolver: zodResolver(videoUpdateSchema),
     defaultValues: video,
@@ -280,7 +296,11 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                               Change
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                generateThumbnail.mutate({ id: videoId })
+                              }
+                            >
                               <SparklesIcon />
                               AI-Generate
                             </DropdownMenuItem>
