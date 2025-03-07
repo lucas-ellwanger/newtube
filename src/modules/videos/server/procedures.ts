@@ -89,6 +89,16 @@ export const videosRouter = createTRPCRouter({
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 
+      // Delete thumbnail and preview files from UploadThing
+      if (removedVideo.thumbnailKey && removedVideo.previewKey) {
+        const utapi = new UTApi();
+
+        await utapi.deleteFiles([
+          removedVideo.thumbnailKey,
+          removedVideo.previewKey,
+        ]);
+      }
+
       // Delete video from Mux if it exists
       if (removedVideo.muxAssetId) {
         await mux.video.assets.delete(removedVideo.muxAssetId);
