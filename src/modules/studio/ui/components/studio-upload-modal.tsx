@@ -14,9 +14,13 @@ export const StudioUploadModal = () => {
   const router = useRouter();
   const utils = trpc.useUtils();
   const create = trpc.videos.create.useMutation({
-    onSuccess: () => {
-      toast.success("Video created");
+    onMutate: () => {
+      const toastId = toast.loading("Creating video...");
+      return { toastId };
+    },
+    onSuccess: (_, __, { toastId }) => {
       utils.studio.getMany.invalidate();
+      toast.success("Video created", { id: toastId });
     },
     onError: () => {
       toast.error("Something went wrong");
