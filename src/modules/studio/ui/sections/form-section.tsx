@@ -53,6 +53,7 @@ import {
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
 
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
+import { ThumbnailGenerateModal } from "../components/thumbnail-generate-modal";
 
 interface FormSectionProps {
   videoId: string;
@@ -75,6 +76,8 @@ const FormSectionSkeleton = () => {
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false);
+  const [thumbnailGenerateModalOpen, setThumbnailGenerateModalOpen] =
+    useState(false);
 
   const router = useRouter();
   const utils = trpc.useUtils();
@@ -121,22 +124,6 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
       utils.studio.getOne.invalidate({ id: videoId });
       utils.studio.getMany.invalidate();
       toast.success("Thumbnail restored", { id: toastId });
-    },
-    onError: () => {
-      toast.error("Something went wrong");
-    },
-  });
-
-  const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
-    onMutate: () => {
-      const toastId = toast.loading("Processing task...");
-      return { toastId };
-    },
-    onSuccess: (_, __, { toastId }) => {
-      toast.success("Background job started", {
-        description: "This may take some time",
-        id: toastId,
-      });
     },
     onError: () => {
       toast.error("Something went wrong");
@@ -205,6 +192,13 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
         onOpenChange={setThumbnailModalOpen}
         videoId={videoId}
       />
+
+      <ThumbnailGenerateModal
+        open={thumbnailGenerateModalOpen}
+        onOpenChange={setThumbnailGenerateModalOpen}
+        videoId={videoId}
+      />
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex items-center justify-between mb-6">
@@ -365,14 +359,14 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                               Change
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem
+                            {/* <DropdownMenuItem
                               onClick={() =>
-                                generateThumbnail.mutate({ id: videoId })
+                                setThumbnailGenerateModalOpen(true)
                               }
                             >
                               <SparklesIcon />
                               AI-Generate
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
 
                             <DropdownMenuItem
                               onClick={() =>
