@@ -6,6 +6,7 @@ import { TRPCProvider } from "@/trpc/client";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
+import { Loader2Icon } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +29,17 @@ export default function RootLayout({
       <html lang="en">
         <body className={`${inter.className} antialiased`}>
           <TRPCProvider>
-            <Toaster theme="light" />
+            <Toaster
+              theme="light"
+              icons={{
+                loading: (
+                  <Loader2Icon
+                    strokeWidth={3}
+                    className="size-4 -mr-1 animate-spin"
+                  />
+                ),
+              }}
+            />
             {children}
           </TRPCProvider>
         </body>
