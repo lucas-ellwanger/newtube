@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Loader2Icon } from "lucide-react";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCProvider } from "@/trpc/client";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
-import { Loader2Icon } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
