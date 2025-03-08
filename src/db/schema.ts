@@ -1,4 +1,5 @@
 import { relations } from "drizzle-orm";
+import { cuid2 } from "drizzle-cuid2/postgres";
 import {
   integer,
   pgEnum,
@@ -6,7 +7,6 @@ import {
   text,
   timestamp,
   uniqueIndex,
-  uuid,
 } from "drizzle-orm/pg-core";
 import {
   createSelectSchema,
@@ -17,7 +17,7 @@ import {
 export const users = pgTable(
   "users",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: cuid2("id").primaryKey().defaultRandom(),
     clerkId: text("clerk_id").unique().notNull(),
     name: text("name").notNull(),
     // TODO: add banner fields
@@ -35,7 +35,7 @@ export const userRelations = relations(users, ({ many }) => ({
 export const categories = pgTable(
   "categories",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
+    id: cuid2("id").primaryKey().defaultRandom(),
     name: text("name").notNull().unique(),
     description: text("description").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -53,33 +53,37 @@ export const videoVisibility = pgEnum("video_visibility", [
   "private",
 ]);
 
-export const videos = pgTable("videos", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  title: text("title").notNull(),
-  description: text("description"),
-  muxStatus: text("mux_status"),
-  muxAssetId: text("mux_asset_id").unique(),
-  muxUploadId: text("mux_upload_id").unique(),
-  muxPlaybackId: text("mux_playback_id").unique(),
-  muxTrackId: text("mux_track_id").unique(),
-  muxTrackStatus: text("mux_track_status"),
-  thumbnailUrl: text("thumbnail_url"),
-  thumbnailKey: text("thumbnail_key"),
-  previewUrl: text("preview_url"),
-  previewKey: text("preview_key"),
-  duration: integer("duration").default(0).notNull(),
-  visibility: videoVisibility("visibility").default("private").notNull(),
-  userId: uuid("user_id")
-    .references(() => users.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  categoryId: uuid("category_id").references(() => categories.id, {
-    onDelete: "set null",
-  }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+export const videos = pgTable(
+  "videos",
+  {
+    id: cuid2("id").primaryKey().defaultRandom(),
+    title: text("title").notNull(),
+    description: text("description"),
+    muxStatus: text("mux_status"),
+    muxAssetId: text("mux_asset_id").unique(),
+    muxUploadId: text("mux_upload_id").unique(),
+    muxPlaybackId: text("mux_playback_id").unique(),
+    muxTrackId: text("mux_track_id").unique(),
+    muxTrackStatus: text("mux_track_status"),
+    thumbnailUrl: text("thumbnail_url"),
+    thumbnailKey: text("thumbnail_key"),
+    previewUrl: text("preview_url"),
+    previewKey: text("preview_key"),
+    duration: integer("duration").default(0).notNull(),
+    visibility: videoVisibility("visibility").default("private").notNull(),
+    userId: cuid2("user_id")
+      .references(() => users.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    categoryId: cuid2("category_id").references(() => categories.id, {
+      onDelete: "set null",
+    }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("id_idx").on(t.id)]
+);
 
 export const videoSelectSchema = createSelectSchema(videos);
 export const videoInsertSchema = createInsertSchema(videos);

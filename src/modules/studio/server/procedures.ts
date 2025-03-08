@@ -8,7 +8,7 @@ import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 
 export const studioRouter = createTRPCRouter({
   getOne: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().cuid2() }))
     .query(async ({ ctx, input }) => {
       const { id: userId } = ctx.user;
       const { id } = input;
@@ -30,7 +30,7 @@ export const studioRouter = createTRPCRouter({
       z.object({
         cursor: z
           .object({
-            id: z.string().uuid(),
+            id: z.string().cuid2(),
             updatedAt: z.date(),
           })
           .nullish(),

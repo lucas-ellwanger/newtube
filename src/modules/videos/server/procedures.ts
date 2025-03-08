@@ -1,15 +1,40 @@
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { UTApi } from "uploadthing/server";
+import { and, eq, getTableColumns } from "drizzle-orm";
 
 import { db } from "@/db";
 import { mux } from "@/lib/mux";
-import { videos, videoUpdateSchema } from "@/db/schema";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { workflow } from "@/lib/workflow";
+import { users, videos, videoUpdateSchema } from "@/db/schema";
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
 
 export const videosRouter = createTRPCRouter({
+  getOne: baseProcedure
+    .input(z.object({ id: z.string().cuid2() }))
+    .query(async ({ input }) => {
+      const [existingVideo] = await db
+        .select({
+          ...getTableColumns(videos),
+          user: {
+            ...getTableColumns(users),
+          },
+        })
+        .from(videos)
+        .innerJoin(users, eq(videos.userId, users.id))
+        .where(eq(videos.id, input.id));
+
+      if (!existingVideo) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return existingVideo;
+    }),
+
   create: protectedProcedure.mutation(async ({ ctx }) => {
     const { id: userId } = ctx.user;
 
@@ -76,7 +101,7 @@ export const videosRouter = createTRPCRouter({
     }),
 
   remove: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().cuid2() }))
     .mutation(async ({ ctx, input }) => {
       const { id: userId } = ctx.user;
 
@@ -108,7 +133,7 @@ export const videosRouter = createTRPCRouter({
     }),
 
   restoreThumbnail: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().cuid2() }))
     .mutation(async ({ ctx, input }) => {
       const { id: userId } = ctx.user;
 
@@ -172,7 +197,7 @@ export const videosRouter = createTRPCRouter({
   generateThumbnail: protectedProcedure
     .input(
       z.object({
-        id: z.string().uuid(),
+        id: z.string().cuid2(),
         prompt: z.string().min(10),
       })
     )
@@ -189,7 +214,7 @@ export const videosRouter = createTRPCRouter({
     }),
 
   generateTitle: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().cuid2() }))
     .mutation(async ({ ctx, input }) => {
       const { id: userId } = ctx.user;
 
@@ -203,7 +228,7 @@ export const videosRouter = createTRPCRouter({
     }),
 
   generateDescription: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().cuid2() }))
     .mutation(async ({ ctx, input }) => {
       const { id: userId } = ctx.user;
 

@@ -16,7 +16,7 @@ export const ourFileRouter = {
       maxFileCount: 1,
     },
   })
-    .input(z.object({ videoId: z.string().uuid() }))
+    .input(z.object({ videoId: z.string().cuid2() }))
     .middleware(async ({ input }) => {
       const { userId: clerkUserId } = await auth();
 

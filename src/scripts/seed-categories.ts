@@ -1,4 +1,5 @@
-// TODO: Create a script to seed categories
+// Script to seed categories
+// bun src/scripts/seed-categories.ts
 
 import { db } from "@/db";
 import { categories } from "@/db/schema";
