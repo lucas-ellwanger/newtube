@@ -28,6 +28,7 @@ import { videoUpdateSchema } from "@/db/schema";
 import { THUMBNAIL_FALLBACK } from "@/constants";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
@@ -70,7 +71,61 @@ export const FormSection = ({ videoId }: FormSectionProps) => {
 };
 
 const FormSectionSkeleton = () => {
-  return <div>Loading...</div>;
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-32" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+        <Skeleton className="h-9 w-24" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="space-y-8 lg:col-span-3">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-[220px] w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="aspect-video h-28" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:col-span-2">
+          <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden">
+            <Skeleton className="aspect-video" />
+            <div className="px-4 py-4 space-y-6">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-5 w-full" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
@@ -169,6 +224,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
   const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
     update.mutateAsync(data);
+    form.reset(data);
   };
 
   // TODO: Change if deploying outside vercel
@@ -210,7 +266,10 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             </div>
 
             <div className="flex items-center gap-x-2">
-              <Button type="submit" disabled={update.isPending}>
+              <Button
+                type="submit"
+                disabled={update.isPending || !form.formState.isDirty}
+              >
                 Save
               </Button>
 
@@ -233,7 +292,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-10 lg:mb-0">
             <div className="space-y-8 lg:col-span-3">
               <FormField
                 control={form.control}
