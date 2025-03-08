@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 import { HomeNavbar } from "../components/home-navbar";
@@ -7,9 +9,12 @@ interface HomeLayoutProps {
   children: React.ReactNode;
 }
 
-export const HomeLayout = ({ children }: HomeLayoutProps) => {
+export const HomeLayout = async ({ children }: HomeLayoutProps) => {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <div className="w-full">
         <HomeNavbar />
 

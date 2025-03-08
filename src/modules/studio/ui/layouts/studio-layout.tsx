@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 import { StudioNavbar } from "../components/studio-navbar";
@@ -7,9 +9,12 @@ interface StudioLayoutProps {
   children: React.ReactNode;
 }
 
-export const StudioLayout = ({ children }: StudioLayoutProps) => {
+export const StudioLayout = async ({ children }: StudioLayoutProps) => {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
       <div className="w-full">
         <StudioNavbar />
 
