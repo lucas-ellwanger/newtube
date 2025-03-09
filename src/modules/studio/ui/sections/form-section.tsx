@@ -70,6 +70,7 @@ export const FormSection = ({ videoId }: FormSectionProps) => {
   );
 };
 
+// TODO: Improve Skeleton later to match the UI better
 const FormSectionSkeleton = () => {
   return (
     <div>
@@ -230,11 +231,12 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   // TODO: Change if deploying outside vercel
   const fullUrl = `${
     process.env.VERCEL_URL || "http://localhost:3000"
-  }/videos/${videoId}`;
+  }/video/${videoId}`;
 
   const onCopy = async () => {
     await navigator.clipboard.writeText(fullUrl);
     setIsCopied(true);
+    toast.success("Link copied to the clipboard");
 
     setTimeout(() => {
       setIsCopied(false);
@@ -476,7 +478,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
             </div>
 
             <div className="flex flex-col gap-y-8 lg:col-span-2">
-              <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden h-fit">
+              <div className="flex flex-col gap-4 bg-[#F9F9F9] rounded-xl overflow-hidden h-fit pb-3">
                 <div className="aspect-video overflow-hidden relative">
                   <VideoPlayer
                     playbackId={video.muxPlaybackId}
@@ -486,14 +488,17 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
 
                 <div className="flex flex-col p-4 gap-y-6">
                   <div className="flex justify-between items-center gap-x-2">
-                    <div className="flex flex-col gap-y-1">
+                    <div className="flex flex-col">
                       <p className="text-xs text-muted-foreground">
                         Video link
                       </p>
 
                       <div className="flex items-center gap-x-2">
-                        <Link href={`/videos/${video.id}`}>
-                          <p className="line-clamp-1 text-sm text-blue-500">
+                        <Link
+                          href={`/video/${video.id}`}
+                          className="lg:max-w-[290px]"
+                        >
+                          <p className="truncate text-sm text-blue-500">
                             {fullUrl}
                           </p>
                         </Link>
@@ -512,7 +517,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center pb-2">
                     <div className="flex flex-col gap-y-1">
                       <p className="text-xs text-muted-foreground">
                         Video status
