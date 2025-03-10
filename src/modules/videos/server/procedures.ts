@@ -6,7 +6,7 @@ import { and, eq, getTableColumns } from "drizzle-orm";
 import { db } from "@/db";
 import { mux } from "@/lib/mux";
 import { workflow } from "@/lib/workflow";
-import { users, videos, videoUpdateSchema } from "@/db/schema";
+import { users, videos, videoUpdateSchema, videoViews } from "@/db/schema";
 import {
   baseProcedure,
   createTRPCRouter,
@@ -23,6 +23,7 @@ export const videosRouter = createTRPCRouter({
           user: {
             ...getTableColumns(users),
           },
+          viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
         })
         .from(videos)
         .innerJoin(users, eq(videos.userId, users.id))
@@ -126,7 +127,11 @@ export const videosRouter = createTRPCRouter({
 
       // Delete video from Mux if it exists
       if (removedVideo.muxAssetId) {
-        await mux.video.assets.delete(removedVideo.muxAssetId);
+        try {
+          await mux.video.assets.delete(removedVideo.muxAssetId);
+        } catch {
+          return removedVideo;
+        }
       }
 
       return removedVideo;

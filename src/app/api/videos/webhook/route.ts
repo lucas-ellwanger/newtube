@@ -136,7 +136,24 @@ export const POST = async (request: Request) => {
         return new Response("Missing upload ID", { status: 400 });
       }
 
-      await db.delete(videos).where(eq(videos.muxUploadId, data.upload_id));
+      const [removedVideo] = await db
+        .delete(videos)
+        .where(eq(videos.muxUploadId, data.upload_id))
+        .returning();
+
+      if (!removedVideo) {
+        break;
+      }
+
+      // Delete thumbnail and preview files from UploadThing
+      if (removedVideo.thumbnailKey && removedVideo.previewKey) {
+        const utapi = new UTApi();
+
+        await utapi.deleteFiles([
+          removedVideo.thumbnailKey,
+          removedVideo.previewKey,
+        ]);
+      }
 
       break;
     }
