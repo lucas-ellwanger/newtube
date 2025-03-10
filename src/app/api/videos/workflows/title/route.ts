@@ -27,8 +27,7 @@ export const { POST } = serve(async (context) => {
     const [existingVideo] = await db
       .select()
       .from(videos)
-      .where(and(eq(videos.id, videoId), eq(videos.userId, userId)))
-      .limit(1);
+      .where(and(eq(videos.id, videoId), eq(videos.userId, userId)));
 
     if (!existingVideo) {
       throw new Error("Not found");
