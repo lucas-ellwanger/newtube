@@ -1,5 +1,5 @@
-import { VideoView } from "@/modules/videos/ui/views/video-view";
 import { HydrateClient, trpc } from "@/trpc/server";
+import { VideoView } from "@/modules/videos/ui/views/video-view";
 
 interface PageProps {
   params: Promise<{
@@ -10,7 +10,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { videoId } = await params;
 
-  void trpc.studio.getOne.prefetch({ id: videoId });
+  void trpc.videos.getOne.prefetch({ id: videoId });
 
   return (
     <HydrateClient>
