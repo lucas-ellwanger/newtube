@@ -23,9 +23,9 @@ import {
 } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
+import { APP_URL } from "@/constants";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { videoUpdateSchema } from "@/db/schema";
-import { THUMBNAIL_FALLBACK } from "@/constants";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -51,6 +51,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { THUMBNAIL_FALLBACK } from "@/modules/videos/constants";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
 
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
@@ -228,10 +229,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
     form.reset(data);
   };
 
-  // TODO: Change if deploying outside vercel
-  const fullUrl = `${
-    process.env.VERCEL_URL || "http://localhost:3000"
-  }/video/${videoId}`;
+  const fullUrl = `${APP_URL}/video/${videoId}`;
 
   const onCopy = async () => {
     await navigator.clipboard.writeText(fullUrl);

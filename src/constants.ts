@@ -1,5 +1,5 @@
 // Number of videos loaded in infinite scroll
 export const DEFAULT_LIMIT = 5;
 
-// Thumbnail placeholder path
-export const THUMBNAIL_FALLBACK = "/placeholder.svg";
+export const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";

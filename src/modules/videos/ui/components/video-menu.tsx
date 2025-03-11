@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import {
   ListPlusIcon,
   MoreVerticalIcon,
@@ -5,6 +6,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 
+import { APP_URL } from "@/constants";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "sonner";
 
 interface VideoMenuProps {
   videoId: string;
@@ -23,10 +24,7 @@ interface VideoMenuProps {
 // TODO: Properly implement video menu actions
 export const VideoMenu = ({ videoId, variant, onRemove }: VideoMenuProps) => {
   const onShare = async () => {
-    // TODO: Change if deploying outside vercel
-    const fullUrl = `${
-      process.env.VERCEL_URL || "http://localhost:3000"
-    }/video/${videoId}`;
+    const fullUrl = `${APP_URL}/video/${videoId}`;
 
     await navigator.clipboard.writeText(fullUrl);
     toast.success("Link copied to the clipboard");

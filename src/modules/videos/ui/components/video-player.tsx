@@ -2,7 +2,7 @@
 
 import MuxPlayer from "@mux/mux-player-react";
 
-import { THUMBNAIL_FALLBACK } from "@/constants";
+import { THUMBNAIL_FALLBACK } from "@/modules/videos/constants";
 
 interface VideoPlayerProps {
   playbackId?: string | null | undefined;
