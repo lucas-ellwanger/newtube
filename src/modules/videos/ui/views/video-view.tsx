@@ -17,7 +17,7 @@ export const VideoView = ({ videoId }: VideoViewProps) => {
             <SuggestionsSection />
           </div>
 
-          <CommentsSection />
+          <CommentsSection videoId={videoId} />
         </div>
 
         {/* TODO: shrink-0 ? */}
