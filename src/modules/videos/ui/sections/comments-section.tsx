@@ -47,7 +47,7 @@ const CommentsSectionSuspense = ({ videoId }: CommentsSectionProps) => {
     <div className="mt-6">
       <div className="flex flex-col gap-6">
         <h1 className="text-xl font-semibold">
-          {comments.pages[0].totalData} Comments
+          {comments.pages[0].commentsCount} Comments
         </h1>
 
         <CommentForm videoId={videoId} />

@@ -2,8 +2,15 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { useAuth, useClerk } from "@clerk/nextjs";
-import { MessageSquareIcon, MoreVerticalIcon, Trash2Icon } from "lucide-react";
+import {
+  MessageSquareIcon,
+  MoreVerticalIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+  Trash2Icon,
+} from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
@@ -22,9 +29,9 @@ interface CommentItemProps {
 
 export const CommentItem = ({ comment }: CommentItemProps) => {
   const clerk = useClerk();
-  const { userId } = useAuth();
-
+  const { userId, isLoaded } = useAuth();
   const utils = trpc.useUtils();
+
   const remove = trpc.comments.remove.useMutation({
     onSuccess: () => {
       utils.comments.getMany.invalidate({ videoId: comment.videoId });
@@ -34,6 +41,34 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
       if (error.data?.code === "UNAUTHORIZED") {
         clerk.openSignIn();
         toast.error("You must be signed in to comment");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+  });
+
+  const like = trpc.commentReactions.like.useMutation({
+    onSuccess: () => {
+      utils.comments.getMany.invalidate({ videoId: comment.videoId });
+    },
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        clerk.openSignIn();
+        toast.error("You must be signed in to like a comment");
+      } else {
+        toast.error("Something went wrong");
+      }
+    },
+  });
+
+  const dislike = trpc.commentReactions.dislike.useMutation({
+    onSuccess: () => {
+      utils.comments.getMany.invalidate({ videoId: comment.videoId });
+    },
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        clerk.openSignIn();
+        toast.error("You must be signed in to dislike a comment");
       } else {
         toast.error("Something went wrong");
       }
@@ -66,7 +101,49 @@ export const CommentItem = ({ comment }: CommentItemProps) => {
 
           <p className="text-sm">{comment.content}</p>
 
-          {/* TODO: Reactions */}
+          <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8 rounded-full"
+                disabled={like.isPending || !isLoaded}
+                onClick={() => like.mutate({ commentId: comment.id })}
+              >
+                <ThumbsUpIcon
+                  className={cn(
+                    comment.viewerReaction === "like" && "fill-black"
+                  )}
+                />
+              </Button>
+
+              {comment.likeCount > 0 && (
+                <span className="text-xs text-muted-foreground mr-1.5">
+                  {comment.likeCount}
+                </span>
+              )}
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8 rounded-full"
+                disabled={dislike.isPending || !isLoaded}
+                onClick={() => dislike.mutate({ commentId: comment.id })}
+              >
+                <ThumbsDownIcon
+                  className={cn(
+                    comment.viewerReaction === "dislike" && "fill-black"
+                  )}
+                />
+              </Button>
+
+              {comment.dislikeCount > 0 && (
+                <span className="text-xs text-muted-foreground">
+                  {comment.dislikeCount}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
         <DropdownMenu modal={false}>
