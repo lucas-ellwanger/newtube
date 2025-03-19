@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { cuid2 } from "drizzle-cuid2/postgres";
 import {
+  foreignKey,
   integer,
   pgEnum,
   pgTable,
@@ -232,20 +233,33 @@ export const videoReactionInsertSchema = createInsertSchema(videoReactions);
 export const videoReactionUpdateSchema = createUpdateSchema(videoReactions);
 
 // * COMMENTS
-export const comments = pgTable("comments", {
-  id: cuid2("id").primaryKey().defaultRandom(),
-  userId: cuid2("user_id")
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-  videoId: cuid2("video_id")
-    .references(() => videos.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  content: text("content").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+export const comments = pgTable(
+  "comments",
+  {
+    id: cuid2("id").primaryKey().defaultRandom(),
+    userId: cuid2("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    videoId: cuid2("video_id")
+      .references(() => videos.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    parentId: cuid2("parent_id"),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => {
+    return [
+      foreignKey({
+        columns: [t.parentId],
+        foreignColumns: [t.id],
+        name: "comments_parent_id_fkey",
+      }).onDelete("cascade"),
+    ];
+  }
+);
 
 export const commentRelations = relations(comments, ({ one, many }) => ({
   user: one(users, {
@@ -256,7 +270,15 @@ export const commentRelations = relations(comments, ({ one, many }) => ({
     fields: [comments.videoId],
     references: [videos.id],
   }),
+  parent: one(comments, {
+    fields: [comments.parentId],
+    references: [comments.id],
+    relationName: "comments_parent_id_fkey",
+  }),
   reactions: many(commentReactions),
+  replies: many(comments, {
+    relationName: "comments_parent_id_fkey",
+  }),
 }));
 
 export const commentInsertSchema = createInsertSchema(comments).omit({
