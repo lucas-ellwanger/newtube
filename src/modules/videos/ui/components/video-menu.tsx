@@ -22,7 +22,11 @@ interface VideoMenuProps {
 }
 
 // TODO: Properly implement video menu actions
-export const VideoMenu = ({ videoId, variant, onRemove }: VideoMenuProps) => {
+export const VideoMenu = ({
+  videoId,
+  variant = "ghost",
+  onRemove,
+}: VideoMenuProps) => {
   const onShare = async () => {
     const fullUrl = `${APP_URL}/video/${videoId}`;
 
