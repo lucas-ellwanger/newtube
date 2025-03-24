@@ -15,7 +15,7 @@ import {
 import { type VideoGetManyOutput } from "../../types";
 
 import { VideoMenu } from "./video-menu";
-import { VideoThumbnail } from "./video-thumbnail";
+import { VideoThumbnail, VideoThumbnailSkeleton } from "./video-thumbnail";
 
 const videoRowCardVariants = cva("group flex min-w-0", {
   variants: {
@@ -46,11 +46,35 @@ interface VideoRowCardProps extends VariantProps<typeof videoRowCardVariants> {
   onRemove?: () => void;
 }
 
-// TODO: Add loading state
-export const VideoRowCardSkeleton = () => {
+export const VideoRowCardSkeleton = ({
+  size,
+}: VariantProps<typeof videoRowCardVariants>) => {
   return (
-    <div>
-      <Skeleton />
+    <div className={videoRowCardVariants({ size })}>
+      {/* Thumbnail skeleton */}
+      <div className={thumbnailVariants({ size })}>
+        <VideoThumbnailSkeleton />
+      </div>
+
+      {/* Info skeleton */}
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between gap-x-2"></div>
+        <div className="flex-1 min-w-0">
+          <Skeleton
+            className={cn("h-5 w-[40%]", size === "compact" && "h-4 w-[40%]")}
+          />
+          {size === "default" && (
+            <>
+              <Skeleton className="h-4 w-[20%] mt-1" />
+              <div className="flex items-center gap-2 my-3">
+                <Skeleton className="size-8 rounded-full" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </>
+          )}
+          {size === "compact" && <Skeleton className="h-4 w-[50%] mt-1" />}
+        </div>
+      </div>
     </div>
   );
 };
