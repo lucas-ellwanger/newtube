@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SearchInput } from "./search-input";
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AuthButton } from "@/modules/auth/ui/components/auth-button";
+
+import { SearchInput } from "./search-input";
 
 export const HomeNavbar = () => {
   return (
