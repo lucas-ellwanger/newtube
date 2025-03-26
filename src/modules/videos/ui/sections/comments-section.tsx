@@ -14,11 +14,11 @@ interface CommentsSectionProps {
   videoId: string;
 }
 
-export const CommentsSection = ({ videoId }: CommentsSectionProps) => {
+export const CommentsSection = (props: CommentsSectionProps) => {
   return (
     <Suspense fallback={<CommentsSectionSkeleton />}>
       <ErrorBoundary fallback={<p>Error...</p>}>
-        <CommentsSectionSuspense videoId={videoId} />
+        <CommentsSectionSuspense {...props} />
       </ErrorBoundary>
     </Suspense>
   );

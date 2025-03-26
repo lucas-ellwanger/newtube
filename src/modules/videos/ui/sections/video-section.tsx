@@ -15,11 +15,11 @@ interface VideoSectionProps {
   videoId: string;
 }
 
-export const VideoSection = ({ videoId }: VideoSectionProps) => {
+export const VideoSection = (props: VideoSectionProps) => {
   return (
     <Suspense fallback={<VideoSectionSkeleton />}>
       <ErrorBoundary fallback={<p>Error</p>}>
-        <VideoSectionSuspense videoId={videoId} />
+        <VideoSectionSuspense {...props} />
       </ErrorBoundary>
     </Suspense>
   );

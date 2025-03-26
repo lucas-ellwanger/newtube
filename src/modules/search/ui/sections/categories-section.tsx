@@ -11,11 +11,11 @@ interface CategoriesSectionProps {
   categoryId?: string;
 }
 
-export const CategoriesSection = ({ categoryId }: CategoriesSectionProps) => {
+export const CategoriesSection = (props: CategoriesSectionProps) => {
   return (
     <Suspense fallback={<CategoriesSkeleton />}>
       <ErrorBoundary fallback={<p>Error...</p>}>
-        <CategoriesSectionSuspense categoryId={categoryId} />
+        <CategoriesSectionSuspense {...props} />
       </ErrorBoundary>
     </Suspense>
   );
