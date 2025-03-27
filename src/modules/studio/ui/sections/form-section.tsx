@@ -241,7 +241,7 @@ const FormSectionSuspense = ({ videoId }: FormSectionProps) => {
   });
 
   const onSubmit = (data: z.infer<typeof videoUpdateSchema>) => {
-    update.mutateAsync(data);
+    update.mutate(data);
     form.reset(data);
   };
 
