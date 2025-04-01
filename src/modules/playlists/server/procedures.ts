@@ -3,7 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq, getTableColumns, lt, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
 import {
   playlists,
   playlistVideos,
@@ -33,6 +37,24 @@ export const playlistsRouter = createTRPCRouter({
       }
 
       return createdPlaylist;
+    }),
+
+  remove: protectedProcedure
+    .input(z.object({ playlistId: z.string().cuid2() }))
+    .mutation(async ({ input, ctx }) => {
+      const { id: userId } = ctx.user;
+      const { playlistId } = input;
+
+      const [deletedPlaylist] = await db
+        .delete(playlists)
+        .where(and(eq(playlists.id, playlistId), eq(playlists.userId, userId)))
+        .returning();
+
+      if (!deletedPlaylist) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return deletedPlaylist;
     }),
 
   addVideo: protectedProcedure
@@ -145,6 +167,24 @@ export const playlistsRouter = createTRPCRouter({
       return deletedPlaylistVideo;
     }),
 
+  getOne: protectedProcedure
+    .input(z.object({ playlistId: z.string().cuid2() }))
+    .query(async ({ input, ctx }) => {
+      const { id: userId } = ctx.user;
+      const { playlistId } = input;
+
+      const [existingPlaylist] = await db
+        .select()
+        .from(playlists)
+        .where(and(eq(playlists.id, playlistId), eq(playlists.userId, userId)));
+
+      if (!existingPlaylist) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return existingPlaylist;
+    }),
+
   getMany: protectedProcedure
     .input(
       z.object({
@@ -196,6 +236,95 @@ export const playlistsRouter = createTRPCRouter({
           )
         )
         .orderBy(desc(playlists.updatedAt), desc(playlists.id))
+        // Add 1 to the limit to check if there is more data
+        .limit(limit + 1);
+
+      const hasMore = data.length > limit;
+      // Remove the last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+      // Set the next cursor to the last item if there is more data
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            updatedAt: lastItem.updatedAt,
+          }
+        : null;
+
+      return {
+        items,
+        nextCursor,
+      };
+    }),
+
+  // Every playlist is public, but cant be edited by other users
+  getVideos: baseProcedure
+    .input(
+      z.object({
+        playlistId: z.string().cuid2(),
+        cursor: z
+          .object({
+            id: z.string().cuid2(),
+            updatedAt: z.date(),
+          })
+          .nullish(),
+        limit: z.number().min(1).max(100),
+      })
+    )
+    .query(async ({ input }) => {
+      const { playlistId, cursor, limit } = input;
+
+      const videosFromPlaylist = db.$with("playlist_videos").as(
+        db
+          .select({
+            videoId: playlistVideos.videoId,
+          })
+          .from(playlistVideos)
+          .where(eq(playlistVideos.playlistId, playlistId))
+      );
+
+      const data = await db
+        .with(videosFromPlaylist)
+        .select({
+          ...getTableColumns(videos),
+          user: users,
+          viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)),
+          likeCount: db.$count(
+            videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "like")
+            )
+          ),
+          dislikeCount: db.$count(
+            videoReactions,
+            and(
+              eq(videoReactions.videoId, videos.id),
+              eq(videoReactions.type, "dislike")
+            )
+          ),
+        })
+        .from(videos)
+        .innerJoin(users, eq(videos.userId, users.id))
+        .innerJoin(
+          videosFromPlaylist,
+          eq(videos.id, videosFromPlaylist.videoId)
+        )
+        .where(
+          and(
+            eq(videos.visibility, "public"),
+            cursor
+              ? or(
+                  lt(videos.updatedAt, cursor.updatedAt),
+                  and(
+                    eq(videos.updatedAt, cursor.updatedAt),
+                    lt(videos.id, cursor.id)
+                  )
+                )
+              : undefined
+          )
+        )
+        .orderBy(desc(videos.updatedAt), desc(videos.id))
         // Add 1 to the limit to check if there is more data
         .limit(limit + 1);
 
