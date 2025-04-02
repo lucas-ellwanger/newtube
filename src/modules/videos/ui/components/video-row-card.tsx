@@ -122,7 +122,7 @@ export const VideoRowCard = ({
 
             {size === "default" && (
               <p className="text-xs text-muted-foreground mt-1">
-                {compactViews} views • {compactLikes} likes
+                {compactViews} views &bull; {compactLikes} likes
               </p>
             )}
 
@@ -160,7 +160,7 @@ export const VideoRowCard = ({
 
             {size === "compact" && (
               <p className="text-xs text-muted-foreground mt-1">
-                {compactViews} views • {compactLikes} likes
+                {compactViews} views &bull; {compactLikes} likes
               </p>
             )}
           </Link>
