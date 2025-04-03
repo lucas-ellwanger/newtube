@@ -3,12 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth, useClerk } from "@clerk/nextjs";
-import { HistoryIcon, ListVideoIcon, ThumbsUpIcon } from "lucide-react";
+import { FlameIcon, HomeIcon, PlaySquareIcon } from "lucide-react";
 
 import {
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,32 +15,30 @@ import {
 
 const items = [
   {
-    title: "History",
-    url: "/playlists/history",
-    icon: HistoryIcon,
+    title: "Home",
+    url: "/",
+    icon: HomeIcon,
+  },
+  {
+    title: "Subscriptions",
+    url: "/feed/subscriptions",
+    icon: PlaySquareIcon,
     auth: true,
   },
   {
-    title: "Liked videos",
-    url: "/playlists/liked",
-    icon: ThumbsUpIcon,
-    auth: true,
-  },
-  {
-    title: "All playlists",
-    url: "/playlists",
-    icon: ListVideoIcon,
+    title: "Trending",
+    url: "/feed/trending",
+    icon: FlameIcon,
   },
 ];
 
-export const PersonalSection = () => {
+export const MainItems = () => {
   const clerk = useClerk();
   const pathname = usePathname();
   const { isSignedIn } = useAuth();
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>You</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
