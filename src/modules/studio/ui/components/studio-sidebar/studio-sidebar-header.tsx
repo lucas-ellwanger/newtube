@@ -14,14 +14,15 @@ export const StudioSidebarHeader = () => {
   const { user } = useUser();
   const { state } = useSidebar();
 
-  if (!user && state === "collapsed")
+  if (!user && state === "collapsed") {
     return (
       <SidebarHeader className="flex items-center justify-center">
         <Skeleton className="size-4 rounded-full" />
       </SidebarHeader>
     );
+  }
 
-  if (!user && state === "expanded")
+  if (!user && state === "expanded") {
     return (
       <SidebarHeader className="flex items-center justify-center pb-4">
         <Skeleton className="size-[112px] rounded-full" />
@@ -32,6 +33,7 @@ export const StudioSidebarHeader = () => {
         </div>
       </SidebarHeader>
     );
+  }
 
   if (user && state === "collapsed") {
     return (
