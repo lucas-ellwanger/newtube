@@ -17,7 +17,7 @@ const TITLE_SYSTEM_PROMPT = `Your task is to generate an SEO-focused title for a
 - Avoid jargon or overly complex language, unless it directly supports searchability. 
 - Use action-oriented phrasing or clear value propositions where applicable. 
 - Ensure the title is 3-8 words long and no more than 100 characters. 
-- ONLY return the title as plain text. Do not add quotes or any additional formatting.`;
+- ONLY return the title as plain text. NEVER add quotes or any additional formatting.`;
 
 export const { POST } = serve(async (context) => {
   const input = context.requestPayload as InputType;
@@ -50,7 +50,7 @@ export const { POST } = serve(async (context) => {
 
   const generatedTitle = await context.run("generate-title", async () => {
     const response = await deepseek.chat.completions.create({
-      model: "deepseek/deepseek-chat:free",
+      model: "deepseek/deepseek-chat-v3-0324:free",
       messages: [
         {
           role: "system",

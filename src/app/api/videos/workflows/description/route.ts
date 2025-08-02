@@ -51,7 +51,7 @@ export const { POST } = serve(async (context) => {
     "generate-description",
     async () => {
       const response = await deepseek.chat.completions.create({
-        model: "deepseek/deepseek-chat:free",
+        model: "deepseek/deepseek-chat-v3-0324:free",
         messages: [
           {
             role: "system",
