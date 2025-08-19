@@ -393,7 +393,6 @@ npx vercel --prod
 ### Video & Media
 
 - ✅ **Mux Adaptive Streaming** - Automatically switches between multiple bitrates to adapt to different network environments, with a playback stutter rate \< 0.5%.
-- ✅ **Intelligent Preloading** - Based on user behavior prediction, preloads the next video, reducing playback latency by 60%.
 - ✅ **Image Optimization** - Next.js Image + WebP/AVIF improve loading speed by 50%.
 - ✅ **CDN Distribution** - UploadThing's global CDN provides an average response time \< 50ms.
 
