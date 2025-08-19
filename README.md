@@ -1,22 +1,22 @@
 # NewTube - A Modern Video Sharing Platform
 
-\<p align="center"\>
-\<img src="[https://img.shields.io/badge/Next.js-15.1-blue](https://img.shields.io/badge/Next.js-15.1-blue)" alt="Next.js"\>
-\<img src="[https://img.shields.io/badge/React-19.0-cyan](https://img.shields.io/badge/React-19.0-cyan)" alt="React"\>
-\<img src="[https://img.shields.io/badge/TypeScript-5.0-blue](https://img.shields.io/badge/TypeScript-5.0-blue)" alt="TypeScript"\>
-\<img src="[https://img.shields.io/badge/tRPC-11.0-purple](https://img.shields.io/badge/tRPC-11.0-purple)" alt="tRPC"\>
-\<img src="[https://img.shields.io/badge/Drizzle-0.44-green](https://img.shields.io/badge/Drizzle-0.44-green)" alt="Drizzle"\>
-\<img src="[https://img.shields.io/badge/License-MIT-yellow](https://img.shields.io/badge/License-MIT-yellow)" alt="License"\>
-\</p\>
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-blue" alt="Next.js">
+  <img src="https://img.shields.io/badge/React-19.0-cyan" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-5.0-blue" alt="TypeScript">
+  <img src="https://img.shields.io/badge/tRPC-11.0-purple" alt="tRPC">
+  <img src="https://img.shields.io/badge/Drizzle-0.40-green" alt="Drizzle">
+  <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
+</p>
 
-\<p align="center"\>
-\<strong\>A modern video sharing platform based on the Next.js 15 + tRPC + Drizzle full-stack architecture\</strong\>
-\</p\>
-\<p align="center"\>
-Using an \<strong\>end-to-end type-safe + modular\</strong\> architectural pattern to achieve \<strong\>high-performance video processing & real-time interaction\</strong\>.
-\<br\>The frontend uses \<code\>Next.js 15/React 19/Tailwind CSS/Radix UI\</code\>, and the backend uses \<code\>tRPC/Drizzle ORM/PostgreSQL\</code\>.
-\<br\>The video service is implemented through \<strong\>Mux video processing + Clerk authentication + Upstash caching\</strong\>.
-\</p\>
+<p align="center">
+  <strong>A modern video sharing platform based on the Next.js 15 + tRPC + Drizzle full-stack architecture</strong>
+</p>
+<p align="center">
+Using an <strong>end-to-end type-safe + modular</strong> architectural pattern to achieve <strong>high-performance video processing & real-time interaction</strong>.
+<br>The frontend uses <code>Next.js 15/React 19/Tailwind CSS/Radix UI</code>, and the backend uses <code>tRPC/Drizzle ORM/PostgreSQL</code>.
+<br>The video service is implemented through <strong>Mux video processing + Clerk authentication + Upstash caching</strong>.
+</p>
 
 ---
 
@@ -527,9 +527,3 @@ Thanks to the following excellent open-source projects:
 - [tRPC](https://trpc.io/) - End-to-end typesafe APIs
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [Radix UI](https://radix-ui.com/) - Low-level UI primitives
-
----
-
-\<div align="center"\>
-\<p\>⭐ If this project is helpful to you, please give it a star\!\</p\>
-\</div\>
