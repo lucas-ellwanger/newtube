@@ -36,7 +36,7 @@ Using an <strong>end-to-end type-safe + modular</strong> architectural pattern t
 
 - **📖 Immersive Video Playback** - Mux Player offers a professional player with support for 4K, subtitles, and multiple audio tracks.
 - **🌙 Responsive Design** - Mobile-first design and automatic light/dark theme switching (to do).
-- **⚙️ Creator Studio** - An all-in-one platform for video uploads, editing, data analysis, and revenue management.
+- **⚙️ Creator Studio** - An all-in-one platform for video uploads, editing and data analysis.
 - **🔍 Intelligent Search System** - Full-text search, category filtering, popular recommendations, and search history.
 - **🎭 Smooth Interactive Animations** - Skeleton loading screens, and an optimized user experience.
 
