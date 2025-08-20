@@ -77,7 +77,7 @@ export const POST = async (request: Request) => {
       }
 
       const tempThumbnailUrl = `https://image.mux.com/${playbackId}/thumbnail.jpg`;
-      const tempPreviewUrl = `https://image.mux.com/${playbackId}/animated.gif`;
+      const tempPreviewUrl = `https://image.mux.com/${playbackId}/animated.webp`;
       const duration = data.duration ? Math.round(data.duration * 1000) : 0;
 
       const utapi = new UTApi();

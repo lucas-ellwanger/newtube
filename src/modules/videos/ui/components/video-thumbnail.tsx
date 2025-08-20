@@ -40,9 +40,9 @@ export const VideoThumbnail = ({
         <Image
           src={previewUrl ?? THUMBNAIL_FALLBACK}
           alt={title}
-          unoptimized={!!previewUrl}
-          fill
           priority
+          width={320}
+          height={180}
           className="size-full object-cover opacity-0 group-hover:opacity-100"
         />
       </div>
